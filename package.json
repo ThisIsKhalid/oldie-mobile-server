@@ -1,0 +1,27 @@
+{
+  "name": "b612-used-products-resale-server-side-thisiskhalid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/programming-hero-web-course-4/b612-used-products-resale-server-side-ThisIsKhalid.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/programming-hero-web-course-4/b612-used-products-resale-server-side-ThisIsKhalid/issues"
+  },
+  "homepage": "https://github.com/programming-hero-web-course-4/b612-used-products-resale-server-side-ThisIsKhalid#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongodb": "^4.12.0"
+  }
+}
