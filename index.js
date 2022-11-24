@@ -22,6 +22,7 @@ async function run() {
       .db("oldieMobile")
       .collection("categories");
     const phonesCollection = client.db("oldieMobile").collection("phones");
+    const usersCollection = client.db("oldieMobile").collection("users");
 
     app.get("/categories", async (req, res) => {
       const query = {};
@@ -39,6 +40,18 @@ async function run() {
       const query = { category: category };
       const phones = await phonesCollection.find(query).toArray();
       res.send(phones);
+    });
+
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const oldUser = await usersCollection.findOne(query);
+      // const existedEmail = oldUser?.email;
+      if (user.email === oldUser?.email) {
+        return res.send(oldUser);
+      }
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
     });
   } finally {
   }
