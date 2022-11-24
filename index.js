@@ -18,18 +18,28 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    const categoriesCollection = client.db("oldieMobile").collection("categories");
+    const categoriesCollection = client
+      .db("oldieMobile")
+      .collection("categories");
+    const phonesCollection = client.db("oldieMobile").collection("phones");
 
-    app.get('/categories', async(req, res) => {
-        const query = {};
-        const categories = await categoriesCollection.find(query).toArray();
-        res.send(categories)
-    })
-    app.post('/categories', async(req,res ) => {
-        const category = req.body;
-        const result = await categoriesCollection.insertOne(category);
-        res.send(result)
-    })
+    app.get("/categories", async (req, res) => {
+      const query = {};
+      const categories = await categoriesCollection.find(query).toArray();
+      res.send(categories);
+    });
+    // app.post("/categories", async (req, res) => {
+    //   const category = req.body;
+    //   const result = await categoriesCollection.insertOne(category);
+    //   res.send(result);
+    // });
+
+    app.get("/categories/:phones", async (req, res) => {
+      const category = req.params.phones;
+      const query = { category: category };
+      const phones = await phonesCollection.find(query).toArray();
+      res.send(phones);
+    });
   } finally {
   }
 }
