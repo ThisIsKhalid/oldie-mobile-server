@@ -16,15 +16,24 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
-async function run(){
-    try{
-        
-    }
-    finally{
+async function run() {
+  try {
+    const categoriesCollection = client.db("oldieMobile").collection("categories");
 
-    }
+    app.get('/categories', async(req, res) => {
+        const query = {};
+        const categories = await categoriesCollection.find(query).toArray();
+        res.send(categories)
+    })
+    app.post('/categories', async(req,res ) => {
+        const category = req.body;
+        const result = await categoriesCollection.insertOne(category);
+        res.send(result)
+    })
+  } finally {
+  }
 }
-run().catch((err) => console.log(err))
+run().catch((err) => console.log(err));
 
 app.get("/", (req, res) => {
   res.send("Server is running");

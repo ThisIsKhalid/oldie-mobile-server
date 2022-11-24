@@ -1,11 +1,14 @@
 [
     {
-        "name": "Xiomi"
+        "name": "Xiomi",
+        "img": "https://i.ibb.co/dW879MD/xiomi.png"
     },
     {
-        "name": "Samsung"
+      "name": "Samsung",
+      "img": "https://i.ibb.co/hHJ2tRM/samsung.png"
     },
     {
-        "name": "Oppo"
+      "name": "Oppo",
+      "img": "https://i.ibb.co/349KqsW/oppo.png"
     }
 ]
