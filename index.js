@@ -54,12 +54,20 @@ async function run() {
       res.send(result);
     });
 
-    app.get('/users/admin/:email', async(req, res) => {
+    app.get("/users/admin/:email", async (req, res) => {
       const email = req.params.email;
-      const query = {email: email}
-      const user = await usersCollection.findOne(query)
-      res.send({isAdmin: user?.role === "admin"});
-    })
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      res.send({ isAdmin: user?.role === "admin" });
+    });
+
+    app.get("/users/seller/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      res.send({ isSeller: user?.role === "seller" });
+    });
+
   } finally {
   }
 }
