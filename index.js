@@ -61,13 +61,22 @@ async function run() {
       res.send({ isAdmin: user?.role === "admin" });
     });
 
-    app.get("/users/seller/:email", async (req, res) => {
+    // app.get("/users/seller/:email", async (req, res) => {
+    //   const email = req.params.email;
+    //   const query = { email: email };
+    //   const user = await usersCollection.findOne(query);
+    //   res.send({ isSeller: user?.role === "seller" });
+    // });
+    app.get("/users/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email: email };
       const user = await usersCollection.findOne(query);
-      res.send({ isSeller: user?.role === "seller" });
+      if (user?.role === "seller") {
+        res.send({ isSeller: user?.role === "seller" });
+      } else {
+        res.send({ isBuyer: user?.role === "buyer" });
+      }
     });
-
   } finally {
   }
 }
