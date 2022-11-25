@@ -24,6 +24,7 @@ async function run() {
     const phonesCollection = client.db("oldieMobile").collection("phones");
     const usersCollection = client.db("oldieMobile").collection("users");
 
+    // --------------------------categories--------------------
     app.get("/categories", async (req, res) => {
       const query = {};
       const categories = await categoriesCollection.find(query).toArray();
@@ -36,12 +37,25 @@ async function run() {
     // });
 
     app.get("/categories/:phones", async (req, res) => {
-      const category = req.params.phones;
-      const query = { category: category };
-      const phones = await phonesCollection.find(query).toArray();
+      const category = req.params.phones.toUpperCase();
+      // console.log(category);
+      const query = {};
+      const result = await phonesCollection.find(query).toArray();
+      const phones = result.filter(
+        (phone) => phone.category.toUpperCase() === category
+      );
+      // console.log(phone);
       res.send(phones);
     });
 
+    //-----------------------------phones------------------------
+    app.post("/phones", async (req, res) => {
+      const phone = req.body;
+      const result = await phonesCollection.insertOne(phone);
+      res.send(result);
+    });
+
+    //  ---------------------------users-----------------------
     app.post("/users", async (req, res) => {
       const user = req.body;
       const query = { email: user.email };
