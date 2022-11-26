@@ -79,6 +79,15 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/phones/announce", async (req, res) => {
+      const query = {};
+      const allPhones = await phonesCollection.find(query).toArray();
+      const advertisedPhones = allPhones.filter(
+        (phone) => phone.advertise && !phone.sold
+      );
+      res.send(advertisedPhones)
+    });
+
     //  ---------------------------users-----------------------
     app.post("/users", async (req, res) => {
       const user = req.body;
