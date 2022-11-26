@@ -131,6 +131,22 @@ async function run() {
         res.send({ isBuyer: user?.role === "buyer" });
       }
     });
+
+    app.get("/admin/users/buyers", async (req, res) => {
+      const query = {};
+      const allUsers = await usersCollection.find(query).toArray();
+      const buyers = allUsers.filter(user => user.role === "buyer")
+      res.send(buyers);
+    });
+
+    app.get("/admin/users/sellers", async (req, res) => {
+      const query = {};
+      const allUsers = await usersCollection.find(query).toArray();
+      const buyers = allUsers.filter(user => user.role === "seller")
+      res.send(buyers);
+    });
+
+
   } finally {
   }
 }
