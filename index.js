@@ -62,6 +62,13 @@ async function run() {
       res.send(phones);
     });
 
+    app.delete("/phones/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await phonesCollection.deleteOne(query);
+      res.send(result);
+    });
+
     app.patch("/phones/announce/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
@@ -85,7 +92,7 @@ async function run() {
       const advertisedPhones = allPhones.filter(
         (phone) => phone.advertise && !phone.sold
       );
-      res.send(advertisedPhones)
+      res.send(advertisedPhones);
     });
 
     //  ---------------------------users-----------------------
