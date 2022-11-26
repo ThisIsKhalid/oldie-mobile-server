@@ -55,6 +55,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/phones', async (req, res) => {
+      const email = req.query.email;
+      const query = {email: email}
+      const phones = await phonesCollection.find(query).toArray();
+      res.send(phones)
+    })
+
     //  ---------------------------users-----------------------
     app.post("/users", async (req, res) => {
       const user = req.body;
