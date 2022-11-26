@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 
 const app = express();
@@ -55,12 +55,29 @@ async function run() {
       res.send(result);
     });
 
-    app.get('/phones', async (req, res) => {
+    app.get("/phones", async (req, res) => {
       const email = req.query.email;
-      const query = {email: email}
+      const query = { email: email };
       const phones = await phonesCollection.find(query).toArray();
-      res.send(phones)
-    })
+      res.send(phones);
+    });
+
+    app.patch("/phones/announce/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          advertise: true,
+        },
+      };
+      const result = await phonesCollection.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
 
     //  ---------------------------users-----------------------
     app.post("/users", async (req, res) => {
