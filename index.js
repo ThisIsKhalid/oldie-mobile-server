@@ -30,22 +30,18 @@ async function run() {
       const categories = await categoriesCollection.find(query).toArray();
       res.send(categories);
     });
+
     // app.post("/categories", async (req, res) => {
     //   const category = req.body;
     //   const result = await categoriesCollection.insertOne(category);
     //   res.send(result);
     // });
 
-    app.get("/categories/:phones", async (req, res) => {
-      const category = req.params.phones.toUpperCase();
-      // console.log(category);
-      const query = {};
+    app.get("/categories/:brand", async (req, res) => {
+      const category = req.params.brand;
+      const query = { category: category};
       const result = await phonesCollection.find(query).toArray();
-      const phones = result.filter(
-        (phone) => phone.category.toUpperCase() === category
-      );
-      // console.log(phone);
-      res.send(phones);
+      res.send(result);
     });
 
     //-----------------------------phones------------------------
