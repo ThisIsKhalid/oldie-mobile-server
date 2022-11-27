@@ -167,6 +167,13 @@ async function run() {
 
       res.send({existingUser, existingProducts})
     });
+
+    app.get('/users/isVerfied/:email', async (req, res) => {
+      const email= req.params.email;
+      const query = {email : email}
+      const user = await usersCollection.findOne(query);
+      res.send(user)
+    })
   } finally {
   }
 }
