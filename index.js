@@ -23,6 +23,7 @@ async function run() {
       .collection("categories");
     const phonesCollection = client.db("oldieMobile").collection("phones");
     const usersCollection = client.db("oldieMobile").collection("users");
+    const ordersCollection = client.db("oldieMobile").collection("orders");
 
     // --------------------------categories--------------------
     app.get("/categories", async (req, res) => {
@@ -173,6 +174,20 @@ async function run() {
       const query = {email : email}
       const user = await usersCollection.findOne(query);
       res.send(user)
+    })
+
+    // <-------------------my orders------------->
+    app.post('/myorders', async (req, res) => {
+      const order = req.body;
+      const result = await ordersCollection.insertOne(order);
+      res.send(result)
+    })
+
+    app.get('/myorders', async(req, res) => {
+      const email = req.query.email;
+      const filter = {email: email}
+      const result = await ordersCollection.find(filter).toArray();
+      res.send(result)
     })
   } finally {
   }
