@@ -136,11 +136,25 @@ async function run() {
       res.send(buyers);
     });
 
+    app.delete("/admin/users/buyers/:id", async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await usersCollection.deleteOne(query);
+      res.send(result);
+    });
+
     app.get("/admin/users/sellers", async (req, res) => {
       const query = {};
       const allUsers = await usersCollection.find(query).toArray();
       const sellers = allUsers.filter((user) => user.role === "seller");
       res.send(sellers);
+    });
+
+    app.delete("/admin/users/sellers/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await usersCollection.deleteOne(query);
+      res.send(result);
     });
 
     // <-----------------seller verify-------------->
