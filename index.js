@@ -39,7 +39,7 @@ async function run() {
 
     app.get("/categories/:brand", async (req, res) => {
       const category = req.params.brand;
-      const query = { category: category};
+      const query = { category: category };
       const result = await phonesCollection.find(query).toArray();
       res.send(result);
     });
@@ -104,6 +104,18 @@ async function run() {
       res.send(result);
     });
 
+    // app.put("/users", async (req, res) => {
+    //   const query = {};
+    //   const options = { upsert: true };
+    //   const updatedDoc = {
+    //     $set: {
+    //       status: false,
+    //     },
+    //   };
+    //   const result = await usersCollection.updateMany(query, updatedDoc, options)
+    //   res.send(result)
+    // });
+
     app.get("/users/admin/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email: email };
@@ -131,18 +143,16 @@ async function run() {
     app.get("/admin/users/buyers", async (req, res) => {
       const query = {};
       const allUsers = await usersCollection.find(query).toArray();
-      const buyers = allUsers.filter(user => user.role === "buyer")
+      const buyers = allUsers.filter((user) => user.role === "buyer");
       res.send(buyers);
     });
 
     app.get("/admin/users/sellers", async (req, res) => {
       const query = {};
       const allUsers = await usersCollection.find(query).toArray();
-      const buyers = allUsers.filter(user => user.role === "seller")
-      res.send(buyers);
+      const sellers = allUsers.filter((user) => user.role === "seller");
+      res.send(sellers);
     });
-
-
   } finally {
   }
 }
