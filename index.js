@@ -104,18 +104,6 @@ async function run() {
       res.send(result);
     });
 
-    // app.put("/users", async (req, res) => {
-    //   const query = {};
-    //   const options = { upsert: true };
-    //   const updatedDoc = {
-    //     $set: {
-    //       status: false,
-    //     },
-    //   };
-    //   const result = await usersCollection.updateMany(query, updatedDoc, options)
-    //   res.send(result)
-    // });
-
     app.get("/users/admin/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email: email };
@@ -152,6 +140,32 @@ async function run() {
       const allUsers = await usersCollection.find(query).toArray();
       const sellers = allUsers.filter((user) => user.role === "seller");
       res.send(sellers);
+    });
+
+    // <-----------------seller verify-------------->
+    app.put("/users/seller/:email", async (req, res) => {
+      // const user = req.body;
+      // const userEmail = user?.email;
+      const email = req.params.email;
+      const query = { email: email };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          verified: true,
+        },
+      };
+      const existingUser = await usersCollection.updateOne(
+        query,
+        updateDoc,
+        options
+      );
+
+      const existingProducts = await phonesCollection.updateMany(
+        query,
+        updateDoc
+      );
+
+      res.send({existingUser, existingProducts})
     });
   } finally {
   }
