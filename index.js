@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 
@@ -24,6 +25,20 @@ async function run() {
     const phonesCollection = client.db("oldieMobile").collection("phones");
     const usersCollection = client.db("oldieMobile").collection("users");
     const ordersCollection = client.db("oldieMobile").collection("orders");
+
+    // get jwt
+    app.get("/jwt", async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      if (user) {
+        const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn: "1d",
+        });
+        return res.send({ accessToken: token });
+      }
+      res.status(403).send({ accessToken: "" });
+    });
 
     // --------------------------categories--------------------
     app.get("/categories", async (req, res) => {
@@ -136,7 +151,7 @@ async function run() {
       res.send(buyers);
     });
 
-    app.delete("/admin/users/buyers/:id", async(req, res) => {
+    app.delete("/admin/users/buyers/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await usersCollection.deleteOne(query);
@@ -180,36 +195,36 @@ async function run() {
         updateDoc
       );
 
-      res.send({existingUser, existingProducts})
+      res.send({ existingUser, existingProducts });
     });
 
-    app.get('/users/isVerfied/:email', async (req, res) => {
-      const email= req.params.email;
-      const query = {email : email}
+    app.get("/users/isVerfied/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
       const user = await usersCollection.findOne(query);
-      res.send(user)
-    })
+      res.send(user);
+    });
 
     // <-------------------my orders------------->
-    app.post('/myorders', async (req, res) => {
+    app.post("/myorders", async (req, res) => {
       const order = req.body;
       const result = await ordersCollection.insertOne(order);
-      res.send(result)
-    })
+      res.send(result);
+    });
 
-    app.get('/myorders', async(req, res) => {
+    app.get("/myorders", async (req, res) => {
       const email = req.query.email;
-      const filter = {email: email}
+      const filter = { email: email };
       const result = await ordersCollection.find(filter).toArray();
-      res.send(result)
-    })
+      res.send(result);
+    });
 
-    app.delete('/myorders/:id', async (req, res) => {
+    app.delete("/myorders/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await ordersCollection.deleteOne(query);
       res.send(result);
-    })
+    });
   } finally {
   }
 }
