@@ -243,7 +243,7 @@ async function run() {
     });
 
     // report to admin
-    app.put("/product/reported/:id",verifyJWT, async (req, res) => {
+    app.put("/product/reported/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const options = { upsert: true };
@@ -257,14 +257,21 @@ async function run() {
         updateDoc,
         options
       );
-      res.send(products)
+      res.send(products);
     });
 
-    app.get('/product/reported', async (req, res) => {
+    app.get("/product/reported", async (req, res) => {
       const query = { reported: true };
       const result = await phonesCollection.find(query).toArray();
       res.send(result);
-    })
+    });
+
+    app.delete("/product/reported/:id",verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await phonesCollection.deleteOne(query);
+      res.send(result);
+    });
   } finally {
   }
 }
