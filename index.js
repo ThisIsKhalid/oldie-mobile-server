@@ -124,7 +124,7 @@ async function run() {
     });
 
     //  ---------------------------users-----------------------
-    app.post("/users",verifyJWT, async (req, res) => {
+    app.post("/users", async (req, res) => {
       const user = req.body;
       const query = { email: user.email };
       const oldUser = await usersCollection.findOne(query);
@@ -136,7 +136,7 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/users/admin/:email",verifyJWT, async (req, res) => {
+    app.get("/users/admin/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
       const query = { email: email };
       const user = await usersCollection.findOne(query);
@@ -149,7 +149,7 @@ async function run() {
     //   const user = await usersCollection.findOne(query);
     //   res.send({ isSeller: user?.role === "seller" });
     // });
-    app.get("/users/:email",verifyJWT, async (req, res) => {
+    app.get("/users/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
       const query = { email: email };
       const user = await usersCollection.findOne(query);
@@ -160,28 +160,28 @@ async function run() {
       }
     });
 
-    app.get("/admin/users/buyers",verifyJWT, async (req, res) => {
+    app.get("/admin/users/buyers", verifyJWT, async (req, res) => {
       const query = {};
       const allUsers = await usersCollection.find(query).toArray();
       const buyers = allUsers.filter((user) => user.role === "buyer");
       res.send(buyers);
     });
 
-    app.delete("/admin/users/buyers/:id",verifyJWT, async (req, res) => {
+    app.delete("/admin/users/buyers/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await usersCollection.deleteOne(query);
       res.send(result);
     });
 
-    app.get("/admin/users/sellers",verifyJWT, async (req, res) => {
+    app.get("/admin/users/sellers", verifyJWT, async (req, res) => {
       const query = {};
       const allUsers = await usersCollection.find(query).toArray();
       const sellers = allUsers.filter((user) => user.role === "seller");
       res.send(sellers);
     });
 
-    app.delete("/admin/users/sellers/:id",verifyJWT, async (req, res) => {
+    app.delete("/admin/users/sellers/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await usersCollection.deleteOne(query);
@@ -189,7 +189,7 @@ async function run() {
     });
 
     // <-----------------seller verify-------------->
-    app.put("/users/seller/:email",verifyJWT, async (req, res) => {
+    app.put("/users/seller/:email", verifyJWT, async (req, res) => {
       // const user = req.body;
       // const userEmail = user?.email;
       const email = req.params.email;
@@ -222,25 +222,49 @@ async function run() {
     });
 
     // <-------------------my orders------------->
-    app.post("/myorders",verifyJWT, async (req, res) => {
+    app.post("/myorders", verifyJWT, async (req, res) => {
       const order = req.body;
       const result = await ordersCollection.insertOne(order);
       res.send(result);
     });
 
-    app.get("/myorders",verifyJWT, async (req, res) => {
+    app.get("/myorders", verifyJWT, async (req, res) => {
       const email = req.query.email;
       const filter = { email: email };
       const result = await ordersCollection.find(filter).toArray();
       res.send(result);
     });
 
-    app.delete("/myorders/:id",verifyJWT, async (req, res) => {
+    app.delete("/myorders/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await ordersCollection.deleteOne(query);
       res.send(result);
     });
+
+    // report to admin
+    app.put("/product/reported/:id",verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          reported: true,
+        },
+      };
+      const products = await phonesCollection.updateOne(
+        query,
+        updateDoc,
+        options
+      );
+      res.send(products)
+    });
+
+    app.get('/product/reported', async (req, res) => {
+      const query = { reported: true };
+      const result = await phonesCollection.find(query).toArray();
+      res.send(result);
+    })
   } finally {
   }
 }
